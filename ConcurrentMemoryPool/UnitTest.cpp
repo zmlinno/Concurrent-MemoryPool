@@ -1,6 +1,6 @@
 #include "ObjectPool.h"
 #include "ConcurrentAlloc.h"
-
+//最后的测试
 void Alloc1()
 {
 	for (size_t i = 0; i < 5; ++i)
@@ -26,9 +26,9 @@ void TLSTest()
 	t2.join();
 }
 
-// ���������ͷ�7�θ�8byte�ڲ��ȵļ��������������ͷ�
-// ͨ�����Թ۲���ʾ��������Ĺ��̺��ͷŹ��̣�
-// �����������Ҳ�ָ���з�,�ͷŹ������ֳ�ҳ�ĺϲ���
+// 测试申请释放7次个8byte内不等的几个对象的申请和释放
+// 通过调试观察演示讲解申请的过程和释放过程，
+// 申请过程体现也分割和切分,释放过程体现出页的合并。
 void TestConcurrentAlloc1()
 {
 	void* p1 = ConcurrentAlloc(6);
@@ -58,8 +58,8 @@ void TestConcurrentAlloc1()
 	ConcurrentFree(p7);
 }
 
-// ���������ͷ�1024��8byte�ڲ��ȵļ�����������룬��1024������ѵ�һ��ҳ�����ˡ�
-// ��ϵ㣬ͨ�����Թ۲���ʾ�����1025�����룬��page cacheȥ��һ����span����֤ǰ1024��������з��߼�
+// 测试申请释放1024个8byte内不等的几个对象的申请，这1024次申请把第一个页分完了。
+// 打断点，通过调试观察演示讲解第1025次申请，在page cache去切一个新span，验证前1024次申请和切分逻辑
 void TestConcurrentAlloc2()
 {
 	for (size_t i = 0; i < 1024; ++i)
@@ -85,7 +85,7 @@ void TestAddressShift()
 	}
 }
 
-// ���������̷ֱ߳���һ�������ͷ�10�Σ���֤�����Ķ��̳߳����������ͷ��Ƿ�������
+// 创建两个线程分别走一下申请释放10次，验证基本的多线程场景下申请释放是否有问题
 void MultiThreadAlloc1()
 {
 	std::vector<void*> v;
@@ -127,8 +127,8 @@ void TestMultiThread()
 	t2.join();
 }
 
-// �����ͷ�һ��257KB�ڴ棬��֤����ڴ������ͷţ����Թ۲���page cache�зֺͺϲ����ҳ���߼�
-// �����ͷ�һ��129*8KB�ڴ棬��֤������ڴ������ͷţ����Թ۲���������ͷ��ڴ��߼�
+// 申请释放一次257KB内存，验证大块内存申请释放，调试观察向page cache切分和合并大块页的逻辑
+// 申请释放一次129*8KB内存，验证超大块内存申请释放，调试观察向堆申请释放内存逻辑
 void BigAlloc()
 {
 	void* p1 = ConcurrentAlloc(257 * 1024);
