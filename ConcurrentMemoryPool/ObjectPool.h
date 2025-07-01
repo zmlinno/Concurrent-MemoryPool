@@ -1,10 +1,11 @@
 #pragma once
 #include "Common.h"
 
-// ¶¨³¤ÄÚ´æ³Ø
+// å®šé•¿å†…å­˜æ± 
 //template<size_t N>
 //class ObjectPool
 //{};
+//dian 
 
 template<class T>
 class ObjectPool
@@ -14,7 +15,7 @@ public:
 	{
 		T* obj = nullptr;
 
-		// ÓÅÏÈ°Ñ»¹»ØÀ´ÄÚ´æ¿é¶ÔÏó£¬ÔÙ´ÎÖØ¸´ÀûÓÃ
+		// ä¼˜å…ˆæŠŠè¿˜å›æ¥å†…å­˜å—å¯¹è±¡ï¼Œå†æ¬¡é‡å¤åˆ©ç”¨
 		if (_freeList)
 		{
 			void* next = *((void**)_freeList);
@@ -23,7 +24,7 @@ public:
 		}
 		else
 		{
-			// Ê£ÓàÄÚ´æ²»¹»Ò»¸ö¶ÔÏó´óĞ¡Ê±£¬ÔòÖØĞÂ¿ª´ó¿é¿Õ¼ä
+			// å‰©ä½™å†…å­˜ä¸å¤Ÿä¸€ä¸ªå¯¹è±¡å¤§å°æ—¶ï¼Œåˆ™é‡æ–°å¼€å¤§å—ç©ºé—´
 			if (_remainBytes < sizeof(T))
 			{
 				_remainBytes = 128 * 1024;
@@ -41,7 +42,7 @@ public:
 			_remainBytes -= objSize;
 		}
 
-		// ¶¨Î»new£¬ÏÔÊ¾µ÷ÓÃTµÄ¹¹Ôìº¯Êı³õÊ¼»¯
+		// å®šä½newï¼Œæ˜¾ç¤ºè°ƒç”¨Tçš„æ„é€ å‡½æ•°åˆå§‹åŒ–
 		new(obj)T;
 
 		return obj;
@@ -49,19 +50,19 @@ public:
 
 	void Delete(T* obj)
 	{
-		// ÏÔÊ¾µ÷ÓÃÎö¹¹º¯ÊıÇåÀí¶ÔÏó
+		// æ˜¾ç¤ºè°ƒç”¨ææ„å‡½æ•°æ¸…ç†å¯¹è±¡
 		obj->~T();
 
-		// Í·²å
+		// å¤´æ’
 		*(void**)obj = _freeList;
 		_freeList = obj;
 	}
 
 private:
-	char* _memory = nullptr; // Ö¸Ïò´ó¿éÄÚ´æµÄÖ¸Õë
-	size_t _remainBytes = 0; // ´ó¿éÄÚ´æÔÚÇĞ·Ö¹ı³ÌÖĞÊ£Óà×Ö½ÚÊı
+	char* _memory = nullptr; // æŒ‡å‘å¤§å—å†…å­˜çš„æŒ‡é’ˆ
+	size_t _remainBytes = 0; // å¤§å—å†…å­˜åœ¨åˆ‡åˆ†è¿‡ç¨‹ä¸­å‰©ä½™å­—èŠ‚æ•°
 
-	void* _freeList = nullptr; // »¹»ØÀ´¹ı³ÌÖĞÁ´½ÓµÄ×ÔÓÉÁ´±íµÄÍ·Ö¸Õë
+	void* _freeList = nullptr; // è¿˜å›æ¥è¿‡ç¨‹ä¸­é“¾æ¥çš„è‡ªç”±é“¾è¡¨çš„å¤´æŒ‡é’ˆ
 };
 
 //struct TreeNode
@@ -79,10 +80,10 @@ private:
 //
 //void TestObjectPool()
 //{
-//	// ÉêÇëÊÍ·ÅµÄÂÖ´Î
+//	// ç”³è¯·é‡Šæ”¾çš„è½®æ¬¡
 //	const size_t Rounds = 5;
 //
-//	// Ã¿ÂÖÉêÇëÊÍ·Å¶àÉÙ´Î
+//	// æ¯è½®ç”³è¯·é‡Šæ”¾å¤šå°‘æ¬¡
 //	const size_t N = 100000;
 //
 //	std::vector<TreeNode*> v1;
